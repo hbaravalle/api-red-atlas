@@ -52,6 +52,7 @@ async function count(req, res) {
     const totalProperties = await Property.countDocuments();
     return res.status(200).json(totalProperties);
   } catch (error) {
+    console.log(error);
     return res.status(500).json('Server error');
   }
 }
@@ -86,6 +87,7 @@ async function create(req, res) {
     });
     return res.status(201).json(newProperty);
   } catch (error) {
+    console.log(error);
     return res.status(500).json('Server error');
   }
 }
@@ -96,7 +98,8 @@ async function destroy(req, res) {
   try {
     const propertyToDestroy = await Property.deleteOne({ _id: req.params.id });
     return res.json('Property deleted');
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
     return res.status(500).json('Server error');
   }
 }

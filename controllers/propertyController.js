@@ -2,7 +2,10 @@ import Property from '../models/Property.js';
 
 async function getAll(req, res) {
   try {
-    const { sort } = req.query;
+    const { sort, page = 1, limit = 10 } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
     let sortOption = { createdAt: -1 };
 
     if (sort === 'price_desc') {
@@ -11,7 +14,10 @@ async function getAll(req, res) {
       sortOption = { price: 1 };
     }
 
-    const properties = await Property.find().sort(sortOption);
+    const properties = await Property.find()
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limitNumber);
     return res.status(200).json(properties);
   } catch (error) {
     return res.status(500).json('Server error');

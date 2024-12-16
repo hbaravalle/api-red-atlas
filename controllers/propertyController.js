@@ -6,6 +6,8 @@ async function getAll(req, res) {
 
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+
     let sortOption = { createdAt: -1 };
 
     if (sort === 'price_desc') {
@@ -18,8 +20,20 @@ async function getAll(req, res) {
       .sort(sortOption)
       .skip(skip)
       .limit(limitNumber);
-    return res.status(200).json(properties);
+
+    const totalProperties = await Property.countDocuments();
+    const totalPages = Math.ceil(totalProperties / limitNumber);
+
+    return res.status(200).json({
+      properties,
+      totalProperties,
+      totalPages,
+      currentPage: pageNumber,
+      prevPage: pageNumber > 1 ? pageNumber - 1 : null,
+      nextPage: pageNumber < totalPages ? pageNumber + 1 : null,
+    });
   } catch (error) {
+    console.log(error);
     return res.status(500).json('Server error');
   }
 }

@@ -3,6 +3,8 @@ import express from 'express';
 import connectDB from './config/mongoose.config.js';
 import propertiesRoutes from './routes/propertyRoutes.js';
 
+const PORT = process.env.PORT || 3000;
+
 const app = express();
 app.use(express.json());
 connectDB();
